@@ -16,47 +16,45 @@
           <h2 class="is-size-2 has-text-centered">Latest products</h2>
       </div>
 
-      <div v-for="product in latestProducts" :key="product.id">
-        
-        <div class= 'box'>
-          <figure class='img mb-4'>
-            <img :src='product.get_thumbnail'>
-          </figure>
-
-          <h3 class='is-size-4'>{{ product.name }}</h3>
-          <p class='is-size-6 has-text-grey'>
-            {{ product.price }}
-          </p>
-
-          <router-link 
-            class="button is-dark mt-4" 
-            :to="product.get_absolute_url">View detail</router-link> 
-        </div>
-
-      </div>
+       <ProductBox 
+        v-for="product in latestProducts"
+        :key="product.id"
+        :product="product" />       
     </div>
 
   </div>
 </template>
 
-<script setup>
+<script>
 import axios from 'axios'
-import {reactive, onMounted, ref} from 'vue'
+import ProductBox from '../components/ProductBox.vue'
 
-const latestProducts = ref([])
-
-async function getLatestProducts(){
-  try{
-    const response = await axios.get('/api/v1/latest-products/')
-    // .value is important to assign value to ref
-    latestProducts.value = response.data
-  } catch(error){
-    console.error(error)
+export default {
+  name: 'Home',
+  components:{
+    ProductBox
+  },
+  data() {
+    return {
+      latestProducts: []
+    }
+  },
+  mounted() {
+    this.getLatestProducts()
+    document.title = 'Home | Suinming store'
+  },
+  methods: {
+    async getLatestProducts() {
+      this.$store.commit('setIsLoading', true)
+      try {
+        const {data} = await axios.get('/api/v1/latest-products')
+        this.latestProducts = data
+      } catch (error) {
+        console.errer(error)
+      }
+      this.$store.commit('setIsLoading', false)
+    }
   }
 }
-
-onMounted(() => {
-  getLatestProducts()
-})
-
 </script>
+
