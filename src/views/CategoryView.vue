@@ -8,8 +8,10 @@
     </div> 
     <ProductBox 
       v-for="product in category.products"
-      v-bind:key="product.id"
-      v-bind:product="product" />
+      :key="product.id"
+      :product="product" 
+      :classObj="classObj"
+    />
 </template>
 
 <script>
@@ -23,7 +25,8 @@ export default {
     return{
       category:{
         products:[]
-      }
+      },
+      classObj: {red:true, blue:false, green:false}
     }
   },
   components:{
