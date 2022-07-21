@@ -102,8 +102,9 @@ export default {
   computed: {
     cartTotalLength() {
         let totalLength = 0
-        for (let i = 0; i < this.cart.items.length; i++) {
-            totalLength += this.cart.items[i].quantity
+        let cartVuex = this.$store.state.cart
+        for (let i = 0; i < cartVuex.items.length; i++) {
+            totalLength += cartVuex.items[i].quantity
         }
         return totalLength
     }
